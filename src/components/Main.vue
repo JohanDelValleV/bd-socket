@@ -202,7 +202,7 @@
                 <v-card-actions>
                   <v-spacer></v-spacer>
                   <v-btn color="blue darken-1" flat @click="updateDialogForm = false">Cancel</v-btn>
-                  <v-btn color="blue darken-1" flat @click="actualizar(props.item.id)">Update</v-btn>
+                  <v-btn color="blue darken-1" flat @click="actualizar()">Update</v-btn>
                 </v-card-actions>
               </v-card>
             </v-dialog>
@@ -263,7 +263,7 @@ import { API } from '../service/axios';
       contenido:[]
     }),
     computed: {
-
+      
     },
     methods: {
       eliminar(id){
@@ -273,18 +273,18 @@ import { API } from '../service/axios';
       },
       show(id){
         API.get('settings/'+ id).then(response => {
+          this.myId = id;
           this.name2 = response.data.name;
           this.databaseName2 = response.data.name;
           this.databaseName2 = response.data.name_db;
           this.databaseUser2 = response.data.user_db;
           this.databasePassword2 = response.data.password_db;
           this.dateU = response.data.date_backup;
-          this.time2 = response.data.time_backup;
+          this.time2 = response.data.time_backup;          
         })
       },
-      actualizar(id){
-        console.log(id)
-        API.put('settings/'+ id, {
+      actualizar(){
+        API.put('settings/'+ this.myId, {
           name: this.name2,
           name_db: this.databaseName2,
           user_db: this.databaseUser2,
@@ -299,7 +299,7 @@ import { API } from '../service/axios';
       },
       backup(id){
 
-      },
+      },      
       close () {
         this.dialog = false,
         this.name = null,

@@ -1,13 +1,14 @@
 <template>
-  <v-app dark>
+  <v-app :dark="goDark">
     <div>
-      <v-toolbar flat color="#303030">
+      <v-toolbar flat>
         <v-toolbar-title>BackUp</v-toolbar-title>
         <v-divider
           class="mx-2"
           inset
           vertical
         ></v-divider>
+        <v-toolbar-title><v-switch :label="`Dark Theme`" v-model="goDark" color="dark"></v-switch></v-toolbar-title>
         <v-spacer></v-spacer>
 
         <v-dialog v-model="dialog" width="600px" persistent>
@@ -223,6 +224,7 @@
 import { API } from '../service/axios';
   export default {
     data: () => ({
+      goDark: true,
       name: null,
       databaseName: null,
       databaseUser: null,
@@ -246,19 +248,15 @@ import { API } from '../service/axios';
       updateTime: null,
       myId: null,
       headers: [
-        {
-          text: 'Id',
-          align: 'left',
-          sortable: false
-        },
-        { text: 'Name', align: 'left', sortable: false },
-        { text: 'Database name', sortable: false },
-        { text: 'Database user', sortable: false },
-        { text: 'Database password', sortable: false },
-        { text: 'Backup date', sortable: false },
-        { text: 'Backup time', sortable: false },
-        { text: 'Status', sortable: false },
-        { text: 'Actions', value: 'name', sortable: false }
+        { text: 'Id', align: 'left',sortable: false },
+        { text: 'Name', align: 'center', sortable: false },
+        { text: 'Database name', align: 'center', sortable: false },
+        { text: 'Database user', align: 'center', sortable: false },
+        { text: 'Database password',align: 'center', sortable: false },
+        { text: 'Backup date',align: 'center', sortable: false },
+        { text: 'Backup time',align: 'center', sortable: false },
+        { text: 'Status',align: 'center', sortable: false },
+        { text: 'Actions', value: 'name', align: 'center', sortable: false }
       ],
       contenido:[]
     }),
@@ -289,7 +287,7 @@ import { API } from '../service/axios';
           name_db: this.databaseName2,
           user_db: this.databaseUser2,
           password_db: this.databasePassword2,
-          date_backup: this.date2,
+          date_backup: this.dateU,
           time_backup: this.time2,
           status: 0
         }).then(response => {
@@ -298,7 +296,11 @@ import { API } from '../service/axios';
         })
       },
       backup(id){
-
+        API.put('settings/'+ id, {
+          status: 1
+        }).then(response => {
+          this.getDatos();
+        })
       },      
       close () {
         this.dialog = false,

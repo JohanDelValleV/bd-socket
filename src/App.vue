@@ -1,5 +1,6 @@
 <template>
   <v-app>
+    <notifications group="foo" />
     <v-toolbar app>
       <v-toolbar-title class="headline text-uppercase">
         <span>Vuetify</span>

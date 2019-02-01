@@ -222,6 +222,8 @@
 
 <script>
 import { API } from '../service/axios';
+import Ws from '@adonisjs/websocket-client';
+const ws = Ws('ws://localhost:3333');
   export default {
     data: () => ({
       goDark: true,
@@ -247,6 +249,7 @@ import { API } from '../service/axios';
       updateDate: false,
       updateTime: null,
       myId: null,
+      setting: null,
       headers: [
         { text: 'Id', align: 'left',sortable: false },
         { text: 'Name', align: 'center', sortable: false },
@@ -260,12 +263,15 @@ import { API } from '../service/axios';
       ],
       contenido:[]
     }),
+    async created(){
+      this.inicializeSettingws();
+    },
     computed: {
       
     },
     methods: {
       eliminar(id){
-        API.delete('settings/'+ id).then(response => {
+        API.delete('settings/'+ id).then(() => {
           this.getDatos();
         })
       },
@@ -290,17 +296,32 @@ import { API } from '../service/axios';
           date_backup: this.dateU,
           time_backup: this.time2,
           status: 0
-        }).then(response => {
+        }).then(() => {
           this.getDatos();
           this.updateDialogForm = false;
         })
       },
-      backup(id){
-        API.put('settings/'+ id, {
-          status: 1
-        }).then(response => {
-          this.getDatos();
+      inicializeSettingws :async function(){
+        ws.connect();
+        this.setting = ws.subscribe('setting')
+        let setting = this.setting;
+        setting.on('ready', ()=> {
+          setting.emit('message', 'Hello server')
         })
+      },
+      backup(id){
+        // API.put('settings/'+ id, {
+        //   status: 0
+        // }).then(()=> {
+        //   this.getDatos();
+        // })
+        this.setting.emit('message', id)
+        this.$toasted.show("Sucess!"+id, {
+          closeOnSwipe: true,
+          theme: "outline", 
+          position: "top-right", 
+          duration : 5000
+        });
       },      
       close () {
         this.dialog = false,
@@ -313,14 +334,14 @@ import { API } from '../service/axios';
       },
       save () {
         API.post('settings/',{
-          name: this.name,
+          name: this.name + '.sql',
           name_db: this.databaseName,
           user_db: this.databaseUser,
           password_db: this.databasePassword,
           date_backup: this.date,
           time_backup: this.time,
           status: 0
-        }).then(response => {
+        }).then(() => {
           this.getDatos();
         })
         this.close();

@@ -2,11 +2,11 @@ import Vue from 'vue'
 import './plugins/vuetify'
 import App from './components/Main.vue'
 // import Notifications from 'vue-notification'
-import Toasted from 'vue-toasted'
+import VueNoty from 'vuejs-noty'
 
 Vue.config.productionTip = false
 
-Vue.use(Toasted)
+Vue.use(VueNoty)
 
 new Vue({
   render: h => h(App),

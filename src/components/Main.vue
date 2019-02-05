@@ -223,6 +223,7 @@
 <script>
 import { API } from '../service/axios';
 import Ws from '@adonisjs/websocket-client';
+import 'vuejs-noty/dist/vuejs-noty.css';
 const ws = Ws('ws://localhost:3333');
   export default {
     data: () => ({
@@ -306,22 +307,23 @@ const ws = Ws('ws://localhost:3333');
         this.setting = ws.subscribe('setting')
         let setting = this.setting;
         setting.on('ready', ()=> {
-          setting.emit('message', 'Hello server')
+          
         })
       },
       backup(id){
         // API.put('settings/'+ id, {
-        //   status: 0
+        //   status: 1
         // }).then(()=> {
         //   this.getDatos();
         // })
         this.setting.emit('message', id)
-        this.$toasted.show("Sucess!"+id, {
-          closeOnSwipe: true,
-          theme: "outline", 
-          position: "top-right", 
-          duration : 5000
-        });
+
+        this.$noty.success("Backup created"+id, {
+          theme: 'bootstrap-v4',
+          closeWith: ['click'],
+          timeout: 1000,
+          layout: 'topRight'
+        })
       },      
       close () {
         this.dialog = false,
